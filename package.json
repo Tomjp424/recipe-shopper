@@ -6,5 +6,8 @@
   },
   "scripts": {
     "electron": "electron ."
+  },
+  "dependencies": {
+    "nodemailer": "^7.0.3"
   }
 }
