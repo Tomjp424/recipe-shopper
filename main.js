@@ -3,6 +3,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { ipcMain } from 'electron';
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,27 +34,24 @@ app.whenReady().then(() => {
 
 ipcMain.handle('send-test-email', async () => {
     try {
-        const testAccount = await nodemailer.createTestAccount();
 
         const transporter = nodemailer.createTransport({
-            host: testAccount.smtp.host,
-            port: testAccount.smtp.port,
-            secure: testAccount.smtp.secure,
+            service: process.env.emailService,
             auth: {
-                user: testAccount.user,
-                pass: testAccount.pass,
+                user: process.env.emailUser,
+                pass: process.env.emailPass,
             }
         });
 
         const emailInfo = await transporter.sendMail({
-            from: '"Test Alias" <testsender@test.com>',
-            to: 'testrecipient@test.com',
+            from: `"Recipe Shopper" ${process.env.emailUser}`,
+            to: 'thomasp.devs@gmail.com',
             subject: 'Test Subject',
             text: 'Test Body',
         });
 
-        console.log('Test email sent.', nodemailer.getTestMessageUrl(emailInfo));
-        return { success: true, previewUrl: nodemailer.getTestMessageUrl(emailInfo) };
+        console.log('Email sent.');
+        return { success: true };
     } catch (error) {
         console.error('Failed to send test email.', error);
         return { success: false, error: error.message };

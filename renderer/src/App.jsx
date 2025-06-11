@@ -11,8 +11,7 @@ function App() {
   const handleSendEmail = async () => {
     const result = await window.electron.sendTestEmail();
     if (result.success) {
-      console.log('Preview URL:', result.previewUrl);
-      alert(`Email sent. Preview URL: ${result.previewUrl}`);
+      alert(`Email sent.`);
     } else {
       alert(`Email failed to send: ${result.error}`);
     }
