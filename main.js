@@ -4,11 +4,14 @@ import { fileURLToPath } from 'url';
 import { ipcMain } from 'electron';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import Store from 'electron-store';
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const store = new Store();
 
 function createWindow() {
     const window = new BrowserWindow({
