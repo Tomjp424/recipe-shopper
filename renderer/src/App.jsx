@@ -1,5 +1,5 @@
 import './App.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
   const [recipes, setRecipes] = useState([]);
@@ -7,6 +7,21 @@ function App() {
   const [recipeName, setRecipeName] = useState('');
   const [newIngredient, setNewIngredient] = useState('');
 
+  // Load recipe list on startup
+  useEffect(() => {
+    const loadRecipes = async () => {
+      const storedRecipes = await window.electron.getRecipes();
+      setRecipes(storedRecipes);
+    };
+    loadRecipes();
+  }, []);
+
+  // Save recipes whenever there is an addition or change
+  useEffect(() => {
+    window.electron.saveRecipes(recipes);
+  }, [recipes]);
+
+  // Add recipe
   const handleAddRecipe = (e) => {
     e.preventDefault();
     if (!recipeName.trim())
@@ -21,6 +36,7 @@ function App() {
     setRecipeName('');
   };
 
+  // Add ingredient to a recipe
   const handleAddIngredient = (e) => {
     e.preventDefault();
     if (!newIngredient.trim() || selectedRecipeIndex === null)
@@ -33,6 +49,7 @@ function App() {
     setNewIngredient('');
   };
 
+  // Send email
   const handleSendEmail = async () => {
     const result = await window.electron.sendTestEmail();
     if (result.success) {

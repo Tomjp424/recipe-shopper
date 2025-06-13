@@ -1,8 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
-    ping: () => ipcRenderer.invoke('ping'),
     sendTestEmail: () => ipcRenderer.invoke('send-test-email'),
+    getRecipes: () => ipcRenderer.invoke('get-recipes'),
+    saveRecipes: (recipes) => ipcRenderer.invoke('save-recipes', recipes),
 });
-
-console.log('preload');

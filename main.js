@@ -61,14 +61,19 @@ ipcMain.handle('send-test-email', async () => {
     }
 });
 
+ipcMain.handle('get-recipes', () => {
+    return store.get('recipes', []);
+});
+
+ipcMain.handle('save-recipes', (event, recipes) => {
+    store.set('recipes', recipes);
+});
+
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin')
         app.quit();
 });
 
-ipcMain.handle('ping', () => {
-    console.log('Ping recieved from front.');
-    return 'pong';
-});
 
-console.log('Main');
+console.log(store);
+store.clear();
